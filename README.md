@@ -1,15 +1,23 @@
+# Introduction
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 This project is to demonstrate how to set up the CI/CD pipeline using GITHUB ACTIONS rather than NETLIFY.
 
-The advantage of using GITHUB ACTIONS over NETLIFY for CI/CD is that, NETLIFY has 300 build minutes for free plan whereas GITHUB Action has 2000 free build minutes per month.
+The advantage of using GITHUB ACTIONS over NETLIFY for CI/CD is pricing
+
+1. NETLIFY has 300 build minutes for free plan whereas GITHUB Action has 2000 free build minutes per month. When the project build time increases, GITHUB Action could save more money for the team.
+
+2. Check the GitHub billing plan [here](https://help.github.com/en/github/setting-up-and-managing-billing-and-payments-on-github/about-billing-for-github-actions)
+
+3. Checkout the Netlify billing plan [here](https://www.netlify.com/pricing/)
 
 ## Testing Plan
-1. Merge/Commit your code to develop or staging branch.
+
+1. Merge your code to `develop` or `staging` branch.
 2. Check the Github Actions to see the build process and wait to the build is accomplished.
-3. Check the website https://staging-react-app-netlify-github-action.netlify.app if you merge your code to staging branch.
-4. Check the website https://dev-react-app-netlify-github-action.netlify.app if you merge your code to develop branch.
+3. Check the website [staging environment](https://staging-react-app-netlify-github-action.netlify.app) if you merge your code to `staging` branch.
+4. Check the website [dev environment](https://dev-react-app-netlify-github-action.netlify.app) if you merge your code to `develop` branch.
 
 ## Available Scripts
 
