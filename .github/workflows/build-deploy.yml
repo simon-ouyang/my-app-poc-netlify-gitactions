@@ -1,0 +1,58 @@
+name: Build and Deploy
+on:
+  push:
+    branches:
+      - develop
+      - staging
+jobs:
+  build:
+    # NOTE make sure the tenant list is always update to date
+    # NOTE github will convert null to 0
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - name: Extract branch name
+        shell: bash
+        run: |
+          echo ::set-output name=branch_name::$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')
+        id: branch-name-detection
+
+      - name: Checkout branch
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ steps.branch-name-detection.outputs.branch_name }}
+      
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build project
+        run: |
+          yarn install --frozen-lockfile
+          yarn build
+
+      - name: Deploy to Netlify Dev Environment
+        if: steps.branch-name-detection.outputs.branch_name == 'develop'
+        uses: nwtgck/actions-netlify@v1.1.3
+        with: 
+            publish-dir: './build'
+            production-branch: ${{ steps.branch-name-detection.outputs.branch_name }}
+            deploy-message: '${{ github.event.head_commit.message }}'
+        env:
+             NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_DEV }}
+             NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}
+
+      - name: Deploy to Netlify Stage Environment
+        if: steps.branch-name-detection.outputs.branch_name == 'staging'
+        uses: nwtgck/actions-netlify@v1.1.3
+        with: 
+            publish-dir: './build'
+            production-branch: ${{ steps.branch-name-detection.outputs.branch_name }}
+            deploy-message: '${{ github.event.head_commit.message }}'
+        env:
+             NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_STAGING }}
+             NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_ACCESS_TOKEN }}

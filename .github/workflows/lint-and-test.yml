@@ -1,0 +1,30 @@
+name: Lint and Test
+# Only for pull requests to major branch
+on:
+  pull_request:
+    branches:
+      - develop
+      - qa
+      - staging
+      - prod
+jobs:
+  lint_and_test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@master
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Yarn Install with cache
+        uses: bahmutov/npm-install@v1
+
+      - name: Lint and Test
+        run: |
+          yarn lint
+          yarn test
